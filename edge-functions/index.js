@@ -1,7 +1,7 @@
 // UUID اختصاصی شما
 let userID = '24b4b24b-3241-4824-a15d-8b093112c314';
-// یک آی‌پی تمیز برای پروکسی
-let proxyIP = 'cdn.anycast.eu.org';
+// آی‌پی تمیز و جدید برای جلوگیری از بسته شدن مسیر (Closed Pipe)
+let proxyIP = 'proxyip.fxxk.dedyn.io';
 
 // تابع استاندارد onRequest مخصوص پلتفرم EdgeOne Makers
 export async function onRequest(context) {
