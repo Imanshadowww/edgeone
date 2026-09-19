@@ -1,9 +1,0 @@
-{
-  "functions": [
-    {
-      "name": "vless-proxy",
-      "entry": "index.js",
-      "routes": ["/*"]
-    }
-  ]
-}
