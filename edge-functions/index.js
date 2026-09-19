@@ -1,25 +1,27 @@
 // UUID اختصاصی شما
 let userID = '24b4b24b-3241-4824-a15d-8b093112c314';
-// یک آی‌پی تمیز برای پروکسی (می‌توانی بعداً تغییر دهی)
+// یک آی‌پی تمیز برای پروکسی
 let proxyIP = 'cdn.anycast.eu.org';
 
-export default {
-  async fetch(request, env, ctx) {
-    try {
-      userID = env.UUID || userID;
-      proxyIP = env.PROXYIP || proxyIP;
-      
-      const upgradeHeader = request.headers.get('Upgrade');
-      if (!upgradeHeader || upgradeHeader !== 'websocket') {
-        return new Response("EdgeOne VLESS is Active and Running!", { status: 200 });
-      }
-      
-      return await vlessOverWSHandler(request);
-    } catch (err) {
-      return new Response(err.toString(), { status: 500 });
+// تابع استاندارد onRequest مخصوص پلتفرم EdgeOne Makers
+export async function onRequest(context) {
+  try {
+    const request = context.request;
+    const env = context.env || {};
+    
+    userID = env.UUID || userID;
+    proxyIP = env.PROXYIP || proxyIP;
+    
+    const upgradeHeader = request.headers.get('Upgrade');
+    if (!upgradeHeader || upgradeHeader !== 'websocket') {
+      return new Response("EdgeOne VLESS is Active and Running!", { status: 200 });
     }
+    
+    return await vlessOverWSHandler(request);
+  } catch (err) {
+    return new Response(err.toString(), { status: 500 });
   }
-};
+}
 
 async function vlessOverWSHandler(request) {
   const webSocketPair = new WebSocketPair();
@@ -34,7 +36,6 @@ async function vlessOverWSHandler(request) {
   const earlyDataHeader = request.headers.get('sec-websocket-protocol') || '';
   const readableWebSocketStream = makeReadableWebSocketStream(webSocket, earlyDataHeader, log);
   let remoteSocketWapper = { value: null };
-  let isDns = false;
 
   readableWebSocketStream.pipeTo(new WritableStream({
     async write(chunk, controller) {
@@ -120,7 +121,6 @@ function processVlessHeader(vlessBuffer, userID) {
     return { hasError: true, message: 'invalid data' };
   }
   const version = new Uint8Array(vlessBuffer.slice(0, 1));
-  let isValidUser = false;
   let isUDP = false;
   
   const optLength = new Uint8Array(vlessBuffer.slice(17, 18))[0];
