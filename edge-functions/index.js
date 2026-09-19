@@ -1,7 +1,7 @@
 // UUID اختصاصی شما
 let userID = '24b4b24b-3241-4824-a15d-8b093112c314';
 // آی‌پی تمیز و جدید برای جلوگیری از بسته شدن مسیر (Closed Pipe)
-let proxyIP = 'edgetunnel.anycast.eu.org';
+let proxyIP = 'cdn-all.xn--b6gac.eu.org';
 
 // تابع استاندارد onRequest مخصوص پلتفرم EdgeOne Makers
 export async function onRequest(context) {
